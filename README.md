@@ -1,9 +1,9 @@
 # MiniJRiscV
-## Generador de Código de 3 Direcciones: JFlex y CUP
+## Generador de Código Risc-V: JFlex y CUP
 Versión minimizada de c++.  
 Implementa patrón de diseño interpreter.  
-Genera código de 3 direcciones con sintaxis de c++.  
-Simula heap y stack con vectores.
+Genera código Risc-V.  
+Simula heap con etiquetas.
 
 ## VSCode Theme
 ![Window](Images/ScreenVSCodeTheme.png)
