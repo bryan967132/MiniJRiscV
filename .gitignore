@@ -1,0 +1,6 @@
+.vscode
+**/bin
+**/*.java~
+**/run.sh
+**/Test.sh
+**/Out
