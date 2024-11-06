@@ -1,0 +1,296 @@
+/* 1. Package e importaciones */
+package Language;
+import java_cup.runtime.*;
+import Painter.WordPainter;
+
+/* 2. Codigo para el parser, variables y metodos */
+parser code 
+{:
+    public ScannerF s;
+    int nIB = 0;
+    WordPainter painter;
+    @SuppressWarnings("deprecation")
+    public ParserF(ScannerF s, WordPainter painter) {
+        super(s);
+        this.s = s;
+        this.painter = painter;
+    }
+    public void syntax_error(Symbol sym) {
+        painter.SERROR(sym.left, sym.right);
+    }
+    public void unrecovered_syntax_error(Symbol sym) throws java.lang.Exception {}
+:} 
+
+/* 3. Terminales*/
+terminal String RW_main, RW_void, RW_String, RW_boolean, RW_char, RW_int, RW_double;
+terminal String RW_if, RW_else, RW_for, RW_while, RW_do, RW_switch, RW_case, RW_default;
+terminal String RW_break, RW_continue, RW_return;
+terminal String RW_true, RW_false, RW_print;
+terminal String TK_char, TK_string, TK_int, TK_double, TK_id, TK_inc, TK_dec, TK_add, TK_sub;
+terminal String TK_plus, TK_minus, TK_mult, TK_div, TK_pow, TK_mod, TK_uminus;
+terminal String TK_equequ, TK_notequ, TK_lessequ, TK_moreequ, TK_equ, TK_less, TK_more;
+terminal String TK_and, TK_or, TK_not;
+terminal String TK_lpar, TK_rpar, TK_lbrc, TK_rbrc, TK_comma, TK_colon, TK_semicolon, TK_question;
+
+/* 4. No Terminales*/
+non terminal String INIT, INSTSGLOBAL, INSTGLOBAL, CALLMAINFUNC, CALLFUNC, LISTARGS, LISTPARAMS;
+non terminal String EXP, ARITHMETICS, RELATIONALS, LOGICS, INCDEC, ADDSUB, TERNARY, CAST;
+non terminal String DECLID, TYPE, INITIDS, INITID, DECLFUNC, ENV, INSTRUCTIONS, INSTRUCTION;
+non terminal String PRINT, IFSTRUCT, SWITCHSTRUCT, ENVS, CASESDEFAULT, CASES, DEFAULT, CASE;
+non terminal String LOOPWHILE, LOOPDOWHILE, LOOPFOR, ARGSFOR, INITIALIZE, UPDATESFOR, UPDATEFOR, REASIGNS, REASIGN;
+non terminal String IDCOLORFNC, IDCOLORUSEFNC, VOIDCOLOR, IFCOLOR, CASECOLOR, DEFAULTCOLOR, PRINTCOLOR, COLORLPAR, COLORRPAR, COLORLBRC, COLORRBRC;
+
+/* 5. Precedencias */
+precedence left TK_question, TK_colon;
+precedence left TK_or;
+precedence left TK_and;
+precedence right TK_not;
+precedence left TK_equequ, TK_notequ;
+precedence left TK_lessequ, TK_moreequ, TK_less, TK_more;
+precedence left TK_plus, TK_minus;
+precedence left TK_mult, TK_div, TK_mod;
+precedence nonassoc TK_pow;
+precedence right TK_uminus;
+precedence left TK_inc, TK_dec;
+
+/* 6. Gramatica Libre de Contexto */
+start with INIT;
+
+INIT ::=
+    INSTSGLOBAL |
+    ;
+
+INSTSGLOBAL ::=
+    INSTSGLOBAL INSTGLOBAL |
+    INSTGLOBAL ;
+
+INSTGLOBAL ::=
+    CALLMAINFUNC |
+    DECLID       |
+    DECLFUNC     |
+    error        ;
+
+CALLMAINFUNC ::=
+    RW_main :mn {:painter.RW4(mnleft, mnright);:} CALLFUNC TK_semicolon ;
+
+CALLFUNC ::=
+    IDCOLORUSEFNC COLORLPAR LISTARGS COLORRPAR |
+    IDCOLORUSEFNC COLORLPAR COLORRPAR          ;
+
+IDCOLORUSEFNC ::=
+    TK_id :id {:painter.USEFNC(idleft, idright);:} ;
+
+LISTARGS ::=
+    LISTARGS TK_comma EXP |
+    EXP                   ;
+
+DECLID ::=
+    TYPE INITIDS TK_semicolon ;
+
+INITIDS ::=
+    INITIDS TK_comma INITID |
+    INITID                  ;
+
+INITID ::=
+    TK_id :id {:painter.VARIABLE(idleft, idright);:} TK_equ EXP |
+    TK_id :id {:painter.VARIABLE(idleft, idright);:}            ;
+
+DECLFUNC ::=
+    TYPE IDCOLORFNC COLORLPAR LISTPARAMS COLORRPAR ENV      |
+    VOIDCOLOR IDCOLORFNC COLORLPAR LISTPARAMS COLORRPAR ENV |
+    TYPE IDCOLORFNC COLORLPAR COLORRPAR ENV                 |
+    VOIDCOLOR IDCOLORFNC COLORLPAR COLORRPAR ENV            ;
+
+IDCOLORFNC ::=
+    TK_id :id {:painter.FNC(idleft, idright);:} ;
+
+VOIDCOLOR ::=
+    RW_void :vd {:painter.RW1(vdleft, vdright);:} ;
+
+LISTPARAMS ::=
+    LISTPARAMS TK_comma TYPE TK_id :id {:painter.VARIABLE(idleft, idright);:} |
+    TYPE TK_id :id {:painter.VARIABLE(idleft, idright);:}                     ;
+
+IFSTRUCT ::=
+    IFCOLOR COLORLPAR EXP COLORRPAR ENV RW_else :el {:painter.RW2(elleft, elright);:} IFSTRUCT |
+    IFCOLOR COLORLPAR EXP COLORRPAR ENV RW_else :el {:painter.RW2(elleft, elright);:} ENV      |
+    IFCOLOR COLORLPAR EXP COLORRPAR ENV             ;
+
+IFCOLOR ::=
+    RW_if :i {:painter.RW2(ileft, iright);:} ;
+
+SWITCHSTRUCT ::=
+    RW_switch :sw {:painter.RW2(swleft, swright);:} COLORLPAR EXP COLORRPAR ENVS ;
+
+ENVS ::=
+    COLORLBRC CASESDEFAULT COLORRBRC |
+    COLORLBRC COLORRBRC              ;
+
+CASESDEFAULT ::=
+    CASES DEFAULT |
+    CASES         |
+    DEFAULT       ;
+
+CASES ::=
+    CASES CASE |
+    CASE       ;
+
+CASE ::=
+    CASECOLOR EXP TK_colon :c {:painter.SYMBS1(cleft, cright);:} INSTRUCTIONS |
+    CASECOLOR EXP TK_colon :c {:painter.SYMBS1(cleft, cright);:} ENV          |
+    CASECOLOR EXP TK_colon :c {:painter.SYMBS1(cleft, cright);:}              ;
+
+CASECOLOR ::=
+    RW_case :cs {:painter.RW2(csleft, csright);:} ;
+
+DEFAULT ::=
+    DEFAULTCOLOR TK_colon :c {:painter.SYMBS1(cleft, cright);:} INSTRUCTIONS |
+    DEFAULTCOLOR TK_colon :c {:painter.SYMBS1(cleft, cright);:} ENV          |
+    DEFAULTCOLOR TK_colon :c {:painter.SYMBS1(cleft, cright);:}              ;
+
+DEFAULTCOLOR ::=
+    RW_default :df {:painter.RW2(dfleft, dfright);:} ;
+
+LOOPFOR ::=
+    RW_for :fr {:painter.RW2(frleft, frright);:} COLORLPAR ARGSFOR COLORRPAR ENV ;
+
+ARGSFOR ::=
+    INITIALIZE TK_semicolon EXP TK_semicolon UPDATESFOR |
+    INITIALIZE TK_semicolon EXP TK_semicolon            |
+    INITIALIZE TK_semicolon TK_semicolon UPDATESFOR     |
+    TK_semicolon EXP TK_semicolon UPDATESFOR            |
+    INITIALIZE TK_semicolon TK_semicolon                |
+    TK_semicolon EXP TK_semicolon                       |
+    TK_semicolon TK_semicolon UPDATESFOR                |
+    TK_semicolon TK_semicolon                           ;
+
+INITIALIZE ::=
+    TYPE REASIGNS |
+    REASIGNS      ;
+
+REASIGNS ::=
+    REASIGNS TK_comma REASIGN |
+    REASIGN                   ;
+
+UPDATESFOR ::=
+    UPDATESFOR TK_comma UPDATEFOR |
+    UPDATEFOR                     ;
+
+UPDATEFOR ::=
+    INCDEC  |
+    REASIGN |
+    ADDSUB  ;
+
+LOOPWHILE ::=
+    RW_while :whl {:painter.RW2(whlleft, whlright);:} COLORLPAR EXP COLORRPAR ENV ;
+
+LOOPDOWHILE ::=
+    RW_do :d {:painter.RW2(dleft, dright);:} ENV RW_while :whl {:painter.RW2(whlleft, whlright);:} COLORLPAR EXP COLORRPAR TK_semicolon ;
+
+REASIGN ::=
+    TK_id :id {:painter.USEVARIABLE(idleft, idright);:} TK_equ EXP ;
+
+INCDEC ::=
+    TK_id :id TK_inc {:painter.USEVARIABLE(idleft, idright);:} |
+    TK_id :id TK_dec {:painter.USEVARIABLE(idleft, idright);:} ;
+
+ADDSUB ::=
+    TK_id :id {:painter.USEVARIABLE(idleft, idright);:} TK_add EXP |
+    TK_id :id {:painter.USEVARIABLE(idleft, idright);:} TK_sub EXP ;
+
+TERNARY ::=
+    EXP TK_question :q {:painter.SYMBS1(qleft, qright);:} EXP TK_colon :c {:painter.SYMBS1(cleft, cright);:} EXP ;
+
+CAST ::=
+    TYPE COLORLPAR EXP COLORRPAR ;
+
+PRINT ::=
+    PRINTCOLOR COLORLPAR EXP COLORRPAR TK_semicolon |
+    PRINTCOLOR COLORLPAR COLORRPAR TK_semicolon     ;
+
+PRINTCOLOR ::=
+    RW_print :p {:painter.USEFNC(pleft, pright);:} ;
+
+ENV ::=
+    COLORLBRC INSTRUCTIONS COLORRBRC |
+    COLORLBRC COLORRBRC              ;
+
+INSTRUCTIONS ::=
+    INSTRUCTIONS INSTRUCTION |
+    INSTRUCTION              ;
+
+INSTRUCTION ::=
+    DECLID                     |
+    IFSTRUCT                   |
+    SWITCHSTRUCT               |
+    LOOPFOR                    |
+    LOOPWHILE                  |
+    LOOPDOWHILE                |
+    REASIGN       TK_semicolon |
+    ADDSUB        TK_semicolon |
+    INCDEC        TK_semicolon |
+    CALLFUNC      TK_semicolon |
+    PRINT                      |
+    RW_return   :t {:painter.RW2(tleft, tright);:} EXP TK_semicolon |
+    RW_return   :t {:painter.RW2(tleft, tright);:} TK_semicolon     |
+    RW_continue :t {:painter.RW2(tleft, tright);:} TK_semicolon     |
+    RW_break    :t {:painter.RW2(tleft, tright);:} TK_semicolon     |
+    error       ;
+
+TYPE ::=
+    RW_String  :tp {:painter.RW5(tpleft, tpright);:} |
+    RW_int     :tp {:painter.RW1(tpleft, tpright);:} |
+    RW_boolean :tp {:painter.RW1(tpleft, tpright);:} |
+    RW_char    :tp {:painter.RW1(tpleft, tpright);:} |
+    RW_double  :tp {:painter.RW1(tpleft, tpright);:} ;
+
+EXP ::=
+    ARITHMETICS             |
+    RELATIONALS             |
+    LOGICS                  |
+    INCDEC                  |
+    CALLFUNC                |
+    TERNARY                 |
+    CAST                    |
+    TK_id     :tr           {:painter.USEVARIABLE(trleft, trright);:} |
+    TK_string :tr           {:painter.STRING(trleft, trright);     :} |
+    TK_char   :tr           {:painter.CHAR(trleft, trright);       :} |
+    TK_int    :tr           {:painter.NUMBER(trleft, trright);     :} |
+    TK_double :tr           {:painter.NUMBER(trleft, trright);     :} |
+    RW_true   :tr           {:painter.RW3(trleft, trright);        :} |
+    RW_false  :tr           {:painter.RW3(trleft, trright);        :} |
+    COLORLPAR EXP COLORRPAR ;
+
+ARITHMETICS ::=
+    EXP TK_plus  EXP |
+    EXP TK_minus EXP |
+    EXP TK_mult  EXP |
+    EXP TK_div   EXP |
+    EXP TK_pow   EXP |
+    EXP TK_mod   EXP |
+    TK_minus     EXP %prec TK_uminus ;
+
+RELATIONALS ::=
+    EXP TK_equequ  EXP |
+    EXP TK_notequ  EXP |
+    EXP TK_lessequ EXP |
+    EXP TK_moreequ EXP |
+    EXP TK_less    EXP |
+    EXP TK_more    EXP ;
+
+LOGICS ::=
+    EXP TK_and EXP |
+    EXP TK_or  EXP |
+    TK_not     EXP ;
+
+COLORLBRC ::=
+    TK_lbrc :l {:painter.BRKT(nIB, lleft, lright); nIB ++;:} ;
+
+COLORRBRC ::=
+    TK_rbrc :r {:nIB --; painter.BRKT(nIB, rleft, rright);:} ;
+
+COLORLPAR ::=
+    TK_lpar :l {:painter.BRKT(nIB, lleft, lright); nIB ++;:} ;
+
+COLORRPAR ::=
+    TK_rpar :r {:nIB --; painter.BRKT(nIB, rleft, rright);:} ;

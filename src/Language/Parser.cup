@@ -1,0 +1,294 @@
+/* 1. Package e importaciones */
+package Language;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java_cup.runtime.*;
+import Classes.Abstracts.*;
+import Classes.Expressions.*;
+import Classes.Instructions.*;
+import Classes.Utils.IDValue;
+import Classes.Utils.InitializeFor;
+import Classes.Utils.Parameter;
+import Classes.Utils.Type;
+import Classes.Utils.Error;
+import Classes.Utils.TypeError;
+import Classes.Utils.Outs;
+
+
+/* 2. Codigo para el parser, variables y metodos */
+parser code 
+{:
+    @SuppressWarnings("deprecation")
+    public Parser(Scanner s) {
+        super(s);
+    }
+    public void syntax_error(Symbol sym) {
+        Outs.errors.add(new Error(sym.left, sym.right, TypeError.SYNTAX, "No se esperaba «" + sym.value + "»"));
+    }
+    public void unrecovered_syntax_error(Symbol sym) throws java.lang.Exception {
+        Outs.errors.add(new Error(sym.left, sym.right, TypeError.SYNTAX, "No se esperaba (0) «" + sym.value + "»"));
+    }
+:} 
+
+/* 3. Terminales*/
+terminal String RW_main, RW_void, RW_String, RW_boolean, RW_char, RW_int, RW_double;
+terminal String RW_if, RW_else, RW_for, RW_while, RW_do, RW_switch, RW_case, RW_default;
+terminal String RW_break, RW_continue, RW_return;
+terminal String RW_true, RW_false, RW_print;
+terminal String TK_char, TK_string, TK_int, TK_double, TK_id, TK_inc, TK_dec, TK_add, TK_sub;
+terminal String TK_plus, TK_minus, TK_mult, TK_div, TK_pow, TK_mod, TK_uminus;
+terminal String TK_equequ, TK_notequ, TK_lessequ, TK_moreequ, TK_equ, TK_less, TK_more;
+terminal String TK_and, TK_or, TK_not;
+terminal String TK_lpar, TK_rpar, TK_lbrc, TK_rbrc, TK_comma, TK_colon, TK_semicolon, TK_question;
+
+/* 4. No Terminales*/
+non terminal ArrayList<Instruction> INIT, INSTSGLOBAL;
+non terminal ArrayList<Sentence> INSTRUCTIONS;
+non terminal ArrayList<Expression> LISTARGS;
+non terminal ArrayList<Parameter> LISTPARAMS;
+non terminal Expression EXP, ARITHMETICS, RELATIONALS, LOGICS, INCDEC, CALLFUNC, TERNARY, CAST;
+non terminal Instruction CALLMAINFUNC, INSTGLOBAL, PRINT, ADDSUB;
+non terminal Instruction DECLID, DECLFUNC;
+non terminal ArrayList<IDValue> INITIDS, INITIDSFOR;
+non terminal IDValue INITID, INITIDFOR;
+non terminal Sentence INSTRUCTION;
+non terminal Sentence IFSTRUCT, SWITCHSTRUCT;
+non terminal Object[] ENVS, CASESDEFAULT, ARGSFOR;
+non terminal ArrayList<Sentence> CASES;
+non terminal Sentence CASE;
+non terminal ArrayList<Sentence> UPDATESFOR;
+non terminal ArrayList<Instruction> REASIGNS;
+non terminal Instruction REASIGN;
+non terminal InitializeFor INITIALIZEFOR;
+non terminal Sentence LOOPWHILE, LOOPDOWHILE, LOOPFOR, UPDATEFOR;
+non terminal Type TYPE;
+non terminal Block ENV, DEFAULT;
+
+/* 5. Precedencias */
+precedence left TK_question, TK_colon;
+precedence left TK_or;
+precedence left TK_and;
+precedence right TK_not;
+precedence left TK_equequ, TK_notequ;
+precedence left TK_lessequ, TK_moreequ, TK_less, TK_more;
+precedence left TK_plus, TK_minus;
+precedence left TK_mult, TK_div, TK_mod;
+precedence nonassoc TK_pow;
+precedence right TK_uminus;
+precedence left TK_inc, TK_dec;
+
+/* 6. Gramatica Libre de Contexto */
+start with INIT;
+
+INIT ::=
+    INSTSGLOBAL :ins {:RESULT = ins;:} |
+    {:RESULT = new ArrayList<>();   :} ;
+
+INSTSGLOBAL ::=
+    INSTSGLOBAL :l INSTGLOBAL :i {:RESULT = l; RESULT.add(i);                 :} |
+    INSTGLOBAL :i                {:RESULT = new ArrayList<>(Arrays.asList(i));:} ;
+
+INSTGLOBAL ::=
+    CALLMAINFUNC :inst {:RESULT = inst;:} |
+    DECLID       :inst {:RESULT = inst;:} |
+    DECLFUNC     :inst {:RESULT = inst;:} |
+    error        ;
+
+CALLMAINFUNC ::=
+    RW_main :m CALLFUNC :callMain TK_semicolon {:RESULT = new MainMethod(mleft, mright, callMain);:} ;
+
+CALLFUNC ::=
+    TK_id :id TK_lpar LISTARGS :l TK_rpar {:RESULT = new CallFunction(idleft, idright, id, l);                :} |
+    TK_id :id TK_lpar TK_rpar             {:RESULT = new CallFunction(idleft, idright, id, new ArrayList<>());:} ;
+
+LISTARGS ::=
+    LISTARGS :l TK_comma EXP :e1 {:RESULT = l; RESULT.add(e1);                 :} |
+    EXP :e1                      {:RESULT = new ArrayList<>(Arrays.asList(e1));:} ;
+
+DECLID ::=
+    TYPE :t INITIDS :arr TK_semicolon {:RESULT = new InitID(tleft, tright, arr, t);:} ;
+
+INITIDS ::=
+    INITIDS :l TK_comma INITID :i {:RESULT = l; RESULT.add(i);                 :} |
+    INITID :i                     {:RESULT = new ArrayList<>(Arrays.asList(i));:} ;
+
+INITID ::=
+    TK_id :id TK_equ EXP :exp {:RESULT = new IDValue(idleft, idright, id, exp); :} |
+    TK_id :id                 {:RESULT = new IDValue(idleft, idright, id, null);:} ;
+
+DECLFUNC ::=
+    TYPE    :t TK_id :id TK_lpar LISTPARAMS :l TK_rpar ENV :b {:RESULT = new Function(tleft, tright, id, l,                 b, t);        :} |
+    RW_void :t TK_id :id TK_lpar LISTPARAMS :l TK_rpar ENV :b {:RESULT = new Function(tleft, tright, id, l,                 b, Type.NULL);:} |
+    TYPE    :t TK_id :id TK_lpar TK_rpar ENV :b               {:RESULT = new Function(tleft, tright, id, new ArrayList<>(), b, t);        :} |
+    RW_void :t TK_id :id TK_lpar TK_rpar ENV :b               {:RESULT = new Function(tleft, tright, id, new ArrayList<>(), b, Type.NULL);:} ;
+
+LISTPARAMS ::=
+    LISTPARAMS :l TK_comma TYPE :t TK_id :id {:RESULT = l; RESULT.add(new Parameter(tleft, tright, id, t));                 :} |
+    TYPE :t TK_id :id                        {:RESULT = new ArrayList<>(Arrays.asList(new Parameter(tleft, tright, id, t)));:} ;
+
+IFSTRUCT ::=
+    RW_if :r TK_lpar EXP :cn TK_rpar ENV :b1 RW_else IFSTRUCT :b2 {:RESULT = new If(rleft, rright, cn, b1, b2);  :} |
+    RW_if :r TK_lpar EXP :cn TK_rpar ENV :b1 RW_else ENV :b2      {:RESULT = new If(rleft, rright, cn, b1, b2);  :} |
+    RW_if :r TK_lpar EXP :cn TK_rpar ENV :b1                      {:RESULT = new If(rleft, rright, cn, b1, null);:} ;
+
+SWITCHSTRUCT ::=
+    RW_switch :s TK_lpar EXP :exp TK_rpar ENVS :b {:RESULT = new Switch(sleft, sright, exp, (ArrayList<Case>) b[0], (Block) b[1]);:} ;
+
+ENVS ::=
+    TK_lbrc CASESDEFAULT :cd TK_rbrc {:RESULT = cd;                       :} |
+    TK_lbrc TK_rbrc                  {:RESULT = new Object[] {null, null};:} ;
+
+CASESDEFAULT ::=
+    CASES :c DEFAULT :d {:RESULT = new Object[] {c,    d};   :} |
+    CASES :c            {:RESULT = new Object[] {c,    null};:} |
+    DEFAULT :d          {:RESULT = new Object[] {null, d};   :} ;
+
+CASES ::= 
+    CASES :l CASE :c {:RESULT = l; RESULT.add(c);                 :} |
+    CASE :c          {:RESULT = new ArrayList<>(Arrays.asList(c));:} ;
+
+CASE ::= 
+    RW_case :c EXP :exp TK_colon INSTRUCTIONS :b {:RESULT = new Case(cleft, cright, exp, new Block(bleft, bright, b));                :} |
+    RW_case :c EXP :exp TK_colon ENV :b          {:RESULT = new Case(cleft, cright, exp, b);                                          :} |
+    RW_case :c EXP :exp TK_colon                 {:RESULT = new Case(cleft, cright, exp, new Block(cleft, cright, new ArrayList<>()));:} ;
+
+DEFAULT ::=
+    RW_default :d TK_colon INSTRUCTIONS :b {:RESULT = new Block(dleft, dright, b);                :} |
+    RW_default :d TK_colon ENV :b          {:RESULT = b;                                          :} |
+    RW_default :d TK_colon                 {:RESULT = new Block(dleft, dright, new ArrayList<>());:} ;
+
+LOOPFOR ::=
+    RW_for :f TK_lpar ARGSFOR :args TK_rpar ENV :b {:RESULT = new For(fleft, fright, (InitializeFor) args[0], (Expression) args[1], (ArrayList<Sentence>) args[2], b);:} ;
+
+ARGSFOR ::=
+    INITIALIZEFOR :i TK_semicolon EXP :e TK_semicolon UPDATESFOR :u {:RESULT = new Object[] {i,    e,    u};   :} |
+    INITIALIZEFOR :i TK_semicolon EXP :e TK_semicolon               {:RESULT = new Object[] {i,    e,    null};:} |
+    INITIALIZEFOR :i TK_semicolon TK_semicolon UPDATESFOR :u        {:RESULT = new Object[] {i,    null, u};   :} |
+    TK_semicolon EXP :e TK_semicolon UPDATESFOR :u                  {:RESULT = new Object[] {null, e,    u};   :} |
+    INITIALIZEFOR :i TK_semicolon TK_semicolon                      {:RESULT = new Object[] {i,    null, null};:} |
+    TK_semicolon EXP :e TK_semicolon                                {:RESULT = new Object[] {null, e,    null};:} |
+    TK_semicolon TK_semicolon UPDATESFOR :u                         {:RESULT = new Object[] {null, null, u};   :} |
+    TK_semicolon TK_semicolon                                       {:RESULT = new Object[] {null, null, null};:} ;
+
+INITIALIZEFOR ::=
+    TYPE :t INITIDSFOR :r {:RESULT = new InitializeFor(new InitID(tleft, tright, r, t));:} |
+    REASIGNS :r           {:RESULT = new InitializeFor(r);                              :} ;
+
+INITIDSFOR ::=
+    INITIDSFOR :l TK_comma INITIDFOR :i {:RESULT = l; RESULT.add(i);                 :} |
+    INITIDFOR :i                        {:RESULT = new ArrayList<>(Arrays.asList(i));:} ;
+
+INITIDFOR ::=
+    TK_id :id TK_equ EXP :exp {:RESULT = new IDValue(idleft, idright, id, exp);:} ;
+
+REASIGNS ::=
+    REASIGNS :l TK_comma REASIGN :r {:RESULT = l; RESULT.add(r);                 :} |
+    REASIGN :r                      {:RESULT = new ArrayList<>(Arrays.asList(r));:} ;
+
+UPDATESFOR ::=
+    UPDATESFOR :l TK_comma UPDATEFOR :up {:RESULT = l; RESULT.add(up);                 :} |
+    UPDATEFOR :up                        {:RESULT = new ArrayList<>(Arrays.asList(up));:} ;
+
+UPDATEFOR ::=
+    INCDEC  :update {:RESULT = update;:} |
+    REASIGN :update {:RESULT = update;:} |
+    ADDSUB  :update {:RESULT = update;:} ;
+
+LOOPWHILE ::=
+    RW_while :w TK_lpar EXP :exp TK_rpar ENV :b {:RESULT = new While(wleft, wright, exp, b);:} ;
+
+LOOPDOWHILE ::=
+    RW_do :d ENV :b RW_while TK_lpar EXP :exp TK_rpar TK_semicolon {:RESULT = new DoWhile(dleft, dright, exp, b);:} ;
+
+REASIGN ::=
+    TK_id :id TK_equ EXP :exp {:RESULT = new AsignID(idleft, idright, id, exp);:} ;
+
+INCDEC ::=
+    TK_id :id TK_inc :s {:RESULT = new IncDec(idleft, idright, id, s);:} |
+    TK_id :id TK_dec :s {:RESULT = new IncDec(idleft, idright, id, s);:} ;
+
+ADDSUB ::=
+    TK_id :id TK_add :s EXP :exp {:RESULT = new AddSub(idleft, idright, id, s, exp);:} |
+    TK_id :id TK_sub :s EXP :exp {:RESULT = new AddSub(idleft, idright, id, s, exp);:} ;
+
+TERNARY ::=
+    EXP :c TK_question EXP :y TK_colon EXP :n {:RESULT = new Ternary(cleft, cright, c, y, n);:} ;
+
+CAST ::=
+    TYPE :t TK_lpar EXP :exp TK_rpar {:RESULT = new Cast(tleft, tright, exp, t);:} ;
+
+PRINT ::=
+    RW_print :p TK_lpar EXP :exp TK_rpar TK_semicolon {:RESULT = new Print(pleft, pright, exp); :} |
+    RW_print :p TK_lpar TK_rpar TK_semicolon          {:RESULT = new Print(pleft, pright, null);:} ;
+
+ENV ::=
+    TK_lbrc :l INSTRUCTIONS :ins TK_rbrc {:RESULT = new Block(lleft, lright, ins);              :} |
+    TK_lbrc :l TK_rbrc                   {:RESULT = new Block(lleft, lright, new ArrayList<>());:} ;
+
+INSTRUCTIONS ::=
+    INSTRUCTIONS :l INSTRUCTION :i {:RESULT = l; RESULT.add(i);                 :} |
+    INSTRUCTION :i                 {:RESULT = new ArrayList<>(Arrays.asList(i));:} ;
+
+INSTRUCTION ::=
+    DECLID       :ins                       {:RESULT = ins;:} |
+    IFSTRUCT     :ins                       {:RESULT = ins;:} |
+    SWITCHSTRUCT :ins                       {:RESULT = ins;:} |
+    LOOPFOR      :ins                       {:RESULT = ins;:} |
+    LOOPWHILE    :ins                       {:RESULT = ins;:} |
+    LOOPDOWHILE  :ins                       {:RESULT = ins;:} |
+    REASIGN      :ins          TK_semicolon {:RESULT = ins;:} |
+    ADDSUB       :ins          TK_semicolon {:RESULT = ins;:} |
+    INCDEC       :ins          TK_semicolon {:RESULT = ins;:} |
+    CALLFUNC     :ins          TK_semicolon {:RESULT = ins;:} |
+    PRINT        :ins                       {:RESULT = ins;:} |
+    RW_return    :ins EXP :exp TK_semicolon {:RESULT = new Return(insleft, insright, exp); :} |
+    RW_return    :ins          TK_semicolon {:RESULT = new Return(insleft, insright, null);:} |
+    RW_continue  :ins          TK_semicolon {:RESULT = new Continue(insleft, insright);    :} |
+    RW_break     :ins          TK_semicolon {:RESULT = new Break(insleft, insright);       :} |
+    error        ;
+
+TYPE ::=
+    RW_String  {:RESULT = Type.STRING; :} |
+    RW_int     {:RESULT = Type.INT;    :} |
+    RW_boolean {:RESULT = Type.BOOLEAN;:} |
+    RW_char    {:RESULT = Type.CHAR;   :} |
+    RW_double  {:RESULT = Type.DOUBLE; :} ;
+
+EXP ::=
+    ARITHMETICS :exp         {:RESULT = exp;:} |
+    RELATIONALS :exp         {:RESULT = exp;:} |
+    LOGICS      :exp         {:RESULT = exp;:} |
+    INCDEC      :exp         {:RESULT = exp;:} |
+    CALLFUNC    :exp         {:RESULT = exp;:} |
+    TERNARY     :exp         {:RESULT = exp;:} |
+    CAST        :exp         {:RESULT = exp;:} |
+    TK_id       :id          {:RESULT = new AccessID(idleft, idright, id);:} |
+    TK_string   :p           {:RESULT = new Primitive(pleft, pright, p, Type.STRING); :} |
+    TK_char     :p           {:RESULT = new Primitive(pleft, pright, p, Type.CHAR);   :} |
+    TK_int      :p           {:RESULT = new Primitive(pleft, pright, p, Type.INT);    :} |
+    TK_double   :p           {:RESULT = new Primitive(pleft, pright, p, Type.DOUBLE); :} |
+    RW_true     :p           {:RESULT = new Primitive(pleft, pright, p, Type.BOOLEAN);:} |
+    RW_false    :p           {:RESULT = new Primitive(pleft, pright, p, Type.BOOLEAN);:} |
+    TK_lpar EXP :exp TK_rpar {:RESULT = exp;:} ;
+
+ARITHMETICS ::=
+    EXP :e1 TK_plus  :s EXP :e2 {:RESULT = new Arithmetic(e1left, e1right, e1, s, e2);:} |
+    EXP :e1 TK_minus :s EXP :e2 {:RESULT = new Arithmetic(e1left, e1right, e1, s, e2);:} |
+    EXP :e1 TK_mult  :s EXP :e2 {:RESULT = new Arithmetic(e1left, e1right, e1, s, e2);:} |
+    EXP :e1 TK_div   :s EXP :e2 {:RESULT = new Arithmetic(e1left, e1right, e1, s, e2);:} |
+    EXP :e1 TK_pow   :s EXP :e2 {:RESULT = new Arithmetic(e1left, e1right, e1, s, e2);:} |
+    EXP :e1 TK_mod   :s EXP :e2 {:RESULT = new Arithmetic(e1left, e1right, e1, s, e2);:} |
+    TK_minus :s         EXP :e2 {:RESULT = new Arithmetic(sleft, sright, null, s, e2);:} %prec TK_uminus ;
+
+RELATIONALS ::=
+    EXP :e1 TK_equequ  :s EXP :e2 {:RESULT = new Relational(e1left, e1right, e1, s, e2);:} |
+    EXP :e1 TK_notequ  :s EXP :e2 {:RESULT = new Relational(e1left, e1right, e1, s, e2);:} |
+    EXP :e1 TK_lessequ :s EXP :e2 {:RESULT = new Relational(e1left, e1right, e1, s, e2);:} |
+    EXP :e1 TK_moreequ :s EXP :e2 {:RESULT = new Relational(e1left, e1right, e1, s, e2);:} |
+    EXP :e1 TK_less    :s EXP :e2 {:RESULT = new Relational(e1left, e1right, e1, s, e2);:} |
+    EXP :e1 TK_more    :s EXP :e2 {:RESULT = new Relational(e1left, e1right, e1, s, e2);:} ;
+
+LOGICS ::=
+    EXP :e1 TK_and :s EXP :e2 {:RESULT = new Logic(e1left, e1right, e1, s, e2);:} |
+    EXP :e1 TK_or  :s EXP :e2 {:RESULT = new Logic(e1left, e1right, e1, s, e2);:} |
+    TK_not :s         EXP :e2 {:RESULT = new Logic(sleft, sright, null, s, e2);:} ;
