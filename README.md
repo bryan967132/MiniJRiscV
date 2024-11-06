@@ -1,4 +1,4 @@
-# MiniJC3D
+# MiniJRiscV
 ## Generador de Código de 3 Direcciones: JFlex y CUP
 Versión minimizada de c++.  
 Implementa patrón de diseño interpreter.  
@@ -295,6 +295,6 @@ Repositorio: [MiniJInterpreter](https://github.com/bryan967132/MiniJInterpreter)
 Usuario: [bryan967132](https://github.com/bryan967132)  
 Repositorio: [PseudoParser](https://github.com/bryan967132/PseudoParser)
 
-## Traductor a Risc-V con JFlex y CUP
+## Traductor a C3D con JFlex y CUP
 Usuario: [bryan967132](https://github.com/bryan967132)  
-Repositorio: [MiniJRiscV](https://github.com/bryan967132/MiniJRiscV)
+Repositorio: [MiniJC3D](https://github.com/bryan967132/MiniJC3D)
