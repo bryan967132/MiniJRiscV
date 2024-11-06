@@ -1,0 +1,31 @@
+main inicio();
+
+void inicio() {
+	int n = 7, r = 4;
+	if(par(n)) {
+		print(n + " es par.");
+	}
+	else {
+		print(n + " es impar.");
+	}
+	if(impar(r)) {
+		print(r + " es impar.");
+	}
+	else {
+		print(r + " es par.");
+	}
+}
+
+boolean par(int n) {
+	if(n == 0) {
+		return true;
+	}
+	return impar(n - 1);
+}
+
+boolean impar(int n) {
+	if(n == 0) {
+		return false;
+	}
+	return par(n - 1);
+}

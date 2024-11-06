@@ -1,0 +1,24 @@
+main inicio();
+
+void inicio() {
+	int n = 5;
+	String resultado = n + "! = " + factorial(n);
+	print(resultado);
+	n --;
+	resultado = n + "! = " + factorial(n);
+	print(resultado);
+	n += 2;
+	resultado = n + "! = " + factorial(n);
+	print(resultado);
+	n = n - 3;
+	resultado = n + "! = " + factorial(n);
+	print(resultado);
+}
+
+int factorial(int n) {
+	if(n == 0) {
+		return 1;
+	}
+	int f = factorial(n - 1);
+	return n * f;
+}
