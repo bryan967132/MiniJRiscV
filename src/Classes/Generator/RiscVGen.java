@@ -31,7 +31,7 @@ public class RiscVGen {
         li("A7", 10);
         ecall();
         addComment("******* FIN PROGRAMA ********");
-        if(usedBuiltins.contains("concatString") || usedBuiltins.contains("lessOrEqual") ||
+        if(usedBuiltins.contains("concatString")  || usedBuiltins.contains("lessOrEqual") ||
             usedBuiltins.contains("greatOrEqual") || usedBuiltins.contains("less")        ||
             usedBuiltins.contains("great")        || usedBuiltins.contains("equal")       ||
             usedBuiltins.contains("notEqual")     || usedBuiltins.contains("printBoolean")) {
