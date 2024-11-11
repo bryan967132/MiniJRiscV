@@ -11,5 +11,5 @@ public abstract class Statement {
         this.column = column;
         this.typeSent = typeSent;
     }
-    public abstract void exec(Env env, RiscVGen riscgen);
+    public abstract void exec(Env env, RiscVGen gen);
 }

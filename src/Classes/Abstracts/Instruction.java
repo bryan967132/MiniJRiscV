@@ -9,5 +9,5 @@ public abstract class Instruction extends Statement {
         super(line, column, TypeSent.INSTRUCTION);
         this.typeInst = typeInst;
     }
-    public abstract void exec(Env env, RiscVGen riscgen);
+    public abstract void exec(Env env, RiscVGen gen);
 }

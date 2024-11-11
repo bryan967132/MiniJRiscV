@@ -11,5 +11,5 @@ public abstract class Expression extends Statement {
         super(line, column, TypeSent.EXPRESSION);
         this.typeExp = typeExp;
     }
-    public abstract void exec(Env env, RiscVGen riscgen);
+    public abstract void exec(Env env, RiscVGen gen);
 }
