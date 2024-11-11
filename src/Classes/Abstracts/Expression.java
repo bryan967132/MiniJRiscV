@@ -1,10 +1,9 @@
 package Classes.Abstracts;
 import Classes.Env.Env;
 import Classes.Generator.RiscVGen;
-import Classes.Utils.ReturnValue;
 import Classes.Utils.TypeExp;
 import Classes.Utils.TypeSent;
-public abstract class Expression extends Sentence {
+public abstract class Expression extends Statement {
     public TypeExp typeExp;
     public String trueLbl;
     public String falseLbl;
@@ -12,5 +11,5 @@ public abstract class Expression extends Sentence {
         super(line, column, TypeSent.EXPRESSION);
         this.typeExp = typeExp;
     }
-    public abstract ReturnValue exec(Env env, RiscVGen riscgen);
+    public abstract void exec(Env env, RiscVGen riscgen);
 }
