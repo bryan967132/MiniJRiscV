@@ -43,7 +43,7 @@ terminal String TK_lpar, TK_rpar, TK_lbrc, TK_rbrc, TK_comma, TK_colon, TK_semic
 
 /* 4. No Terminales*/
 non terminal ArrayList<Instruction> INIT, INSTSGLOBAL;
-non terminal ArrayList<Sentence> INSTRUCTIONS;
+non terminal ArrayList<Statement> INSTRUCTIONS;
 non terminal ArrayList<Expression> LISTARGS;
 non terminal ArrayList<Parameter> LISTPARAMS;
 non terminal Expression EXP, ARITHMETICS, RELATIONALS, LOGICS, INCDEC, CALLFUNC, TERNARY, CAST;
@@ -51,16 +51,16 @@ non terminal Instruction CALLMAINFUNC, INSTGLOBAL, PRINT, ADDSUB;
 non terminal Instruction DECLID, DECLFUNC;
 non terminal ArrayList<IDValue> INITIDS, INITIDSFOR;
 non terminal IDValue INITID, INITIDFOR;
-non terminal Sentence INSTRUCTION;
-non terminal Sentence IFSTRUCT, SWITCHSTRUCT;
+non terminal Statement INSTRUCTION;
+non terminal Statement IFSTRUCT, SWITCHSTRUCT;
 non terminal Object[] ENVS, CASESDEFAULT, ARGSFOR;
-non terminal ArrayList<Sentence> CASES;
-non terminal Sentence CASE;
-non terminal ArrayList<Sentence> UPDATESFOR;
+non terminal ArrayList<Statement> CASES;
+non terminal Statement CASE;
+non terminal ArrayList<Statement> UPDATESFOR;
 non terminal ArrayList<Instruction> REASIGNS;
 non terminal Instruction REASIGN;
 non terminal InitializeFor INITIALIZEFOR;
-non terminal Sentence LOOPWHILE, LOOPDOWHILE, LOOPFOR, UPDATEFOR;
+non terminal Statement LOOPWHILE, LOOPDOWHILE, LOOPFOR, UPDATEFOR;
 non terminal Type TYPE;
 non terminal Block ENV, DEFAULT;
 
@@ -158,7 +158,7 @@ DEFAULT ::=
     RW_default :d TK_colon                 {:RESULT = new Block(dleft, dright, new ArrayList<>());:} ;
 
 LOOPFOR ::=
-    RW_for :f TK_lpar ARGSFOR :args TK_rpar ENV :b {:RESULT = new For(fleft, fright, (InitializeFor) args[0], (Expression) args[1], (ArrayList<Sentence>) args[2], b);:} ;
+    RW_for :f TK_lpar ARGSFOR :args TK_rpar ENV :b {:RESULT = new For(fleft, fright, (InitializeFor) args[0], (Expression) args[1], (ArrayList<Statement>) args[2], b);:} ;
 
 ARGSFOR ::=
     INITIALIZEFOR :i TK_semicolon EXP :e TK_semicolon UPDATESFOR :u {:RESULT = new Object[] {i,    e,    u};   :} |
