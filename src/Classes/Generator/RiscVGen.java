@@ -23,12 +23,12 @@ public class RiscVGen {
     public void addLabel(String label) {
         riscVMain.add(label + ":");
     }
-    public void addComment(String comentario) {
-        riscVMain.add("# " + comentario);
+    public void addComment(String comment) {
+        riscVMain.add("# " + comment);
     }
     public void genFinalCode() {
         addComment("******* FIN PROGRAMA ********");
-        li("A7", 10);
+        li(R.A7.n, 10);
         ecall();
         addComment("******* FIN PROGRAMA ********");
         if(usedBuiltins.contains("concatString")  || usedBuiltins.contains("lessOrEqual") ||
@@ -94,7 +94,7 @@ public class RiscVGen {
         riscVCode.add(".data");
         riscVCode.add("heap:");
         riscVCode.add(".text");
-        riscVCode.add("\tla T6, heap");
+        riscVCode.add("\tla t6, heap");
         riscVCode.add("global:");
         riscVCode.addAll(riscVMain);
     }
@@ -158,6 +158,9 @@ public class RiscVGen {
         riscVMain.add("\tlb " + rd + ", " + inmediato + "(" + rs1 + ")");
     }
     public void li(String rd, int inmediato) {
+        riscVMain.add("\tli " + rd + ", " + inmediato);
+    }
+    public void li(String rd, String inmediato) {
         riscVMain.add("\tli " + rd + ", " + inmediato);
     }
     public void la(String rd, String label) {
