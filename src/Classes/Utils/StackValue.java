@@ -14,6 +14,18 @@ public class StackValue {
         this.type = object.type;
         this.length = object.length;
         this.depth = object.depth;
+        this.offset = object.offset;
+        this.id = id;
+    }
+    public StackValue(StackValue object, int depth) {
+        this.type = object.type;
+        this.length = object.length;
+        this.depth = depth;
+        this.offset = object.offset;
+        this.id = object.id;
+    }
+    public StackValue(String id, int offset) {
+        this.offset = offset;
         this.id = id;
     }
 }
