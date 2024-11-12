@@ -5,8 +5,8 @@ import java.util.Set;
 public class RiscVGen {
     private int labelCount;
     private ArrayList<String> riscVCode;
-    private ArrayList<String> riscVMain;
-    private ArrayList<String> riscVFunctions;
+    public ArrayList<String> riscVMain;
+    public ArrayList<String> riscVFunctions;
     private Set<String> usedBuiltins;
     public RiscVGen() {
         this.labelCount = 0;
@@ -95,7 +95,7 @@ public class RiscVGen {
         riscVCode.add("heap:");
         riscVCode.add(".text");
         riscVCode.add("\tla T6, heap");
-        riscVCode.add("start:");
+        riscVCode.add("global:");
         riscVCode.addAll(riscVMain);
     }
     public String getFinalCode() {
@@ -160,7 +160,7 @@ public class RiscVGen {
     public void li(String rd, int inmediato) {
         riscVMain.add("\tli " + rd + ", " + inmediato);
     }
-    public void la(String rd, int label) {
+    public void la(String rd, String label) {
         riscVMain.add("\tla " + rd + ", " + label);
     }
     public void fli(String rd, int inmediato) {
