@@ -77,32 +77,27 @@ public class Controller {
             ArrayList<Instruction> execute = (ArrayList<Instruction>) parser.parse().value;
             Classes.Utils.Outs.resetOuts();
             Env global = new Env(null, "Global");
-            RiscVGen c3dGen = new RiscVGen();
+            RiscVGen riscvGen = new RiscVGen();
             MainMethod mainMethod = null;
             for(Instruction instruction : execute) {
                 try {
                     if(instruction.typeInst == TypeInst.MAIN) {
                         mainMethod = (MainMethod) instruction;
-                    } else if(instruction.typeInst == TypeInst.INIT_ID || instruction.typeInst == TypeInst.INIT_FUNCTION) {
-                        instruction.exec(global, c3dGen);
+                    } else {
+                        instruction.exec(global, riscvGen);
                     }
-                } catch(Exception e) {}
-            }
-            for(Instruction instruction : execute) {
-                try {
-                    if(instruction.typeInst == TypeInst.INIT_FUNCTION) {
-                        instruction.exec(global, c3dGen);
-                    }
-                } catch(Exception e) {}
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
             }
             if(mainMethod != null) {
-                mainMethod.exec(global, c3dGen);
+                mainMethod.exec(global, riscvGen);
             }
             if(!Outs.getStringOuts().equals("")) {
                 console.setText("MiniJ: " + currentFile.name + "\n" + Outs.getStringOuts());
             } else {
-                c3dGen.genFinalCode();
-                console.setText("/* " + currentFile.name + " */\n" + "\n" + c3dGen.getFinalCode());
+                riscvGen.genFinalCode();
+                console.setText("/* " + currentFile.name + " */\n" + "\n" + riscvGen.getFinalCode());
                 setFormatOut(console);
             }
         } catch (Exception e) {
