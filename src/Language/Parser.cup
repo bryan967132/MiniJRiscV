@@ -34,7 +34,7 @@ parser code
 terminal String RW_main, RW_void, RW_String, RW_boolean, RW_char, RW_int, RW_double;
 terminal String RW_if, RW_else, RW_for, RW_while, RW_do, RW_switch, RW_case, RW_default;
 terminal String RW_break, RW_continue, RW_return;
-terminal String RW_true, RW_false, RW_print;
+terminal String RW_true, RW_false, RW_println, RW_print;
 terminal String TK_char, TK_string, TK_int, TK_double, TK_id, TK_inc, TK_dec, TK_add, TK_sub;
 terminal String TK_plus, TK_minus, TK_mult, TK_div, TK_pow, TK_mod, TK_uminus;
 terminal String TK_equequ, TK_notequ, TK_lessequ, TK_moreequ, TK_equ, TK_less, TK_more;
@@ -218,8 +218,9 @@ CAST ::=
     TYPE :t TK_lpar EXP :exp TK_rpar {:RESULT = new Cast(tleft, tright, exp, t);:} ;
 
 PRINT ::=
-    RW_print :p TK_lpar EXP :exp TK_rpar TK_semicolon {:RESULT = new Print(pleft, pright, exp); :} |
-    RW_print :p TK_lpar TK_rpar TK_semicolon          {:RESULT = new Print(pleft, pright, null);:} ;
+    RW_println :p TK_lpar EXP :exp TK_rpar TK_semicolon {:RESULT = new Print(pleft, pright, exp,  true);:} |
+    RW_println :p TK_lpar TK_rpar TK_semicolon          {:RESULT = new Print(pleft, pright, null, true);:} |
+    RW_print   :p TK_lpar EXP :exp TK_rpar TK_semicolon {:RESULT = new Print(pleft, pright, exp, false);:} ;
 
 ENV ::=
     TK_lbrc :l INSTRUCTIONS :ins TK_rbrc {:RESULT = new Block(lleft, lright, ins);              :} |

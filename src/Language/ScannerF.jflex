@@ -67,6 +67,7 @@ COMMENTM = [/][*][^*]*[*]+([^/*][^*]*[*]+)*[/]
 "return"            {return new Symbol(TOK.RW_return,    yychar, yylength(), yytext());}
 "true"              {return new Symbol(TOK.RW_true,      yychar, yylength(), yytext());}
 "false"             {return new Symbol(TOK.RW_false,     yychar, yylength(), yytext());}
+"println"           {return new Symbol(TOK.RW_println,   yychar, yylength(), yytext());}
 "print"             {return new Symbol(TOK.RW_print,     yychar, yylength(), yytext());}
 // Valores
 {CHAR}              {return new Symbol(TOK.TK_char,      yychar, yylength(), yytext());}

@@ -25,7 +25,7 @@ parser code
 terminal String RW_main, RW_void, RW_String, RW_boolean, RW_char, RW_int, RW_double;
 terminal String RW_if, RW_else, RW_for, RW_while, RW_do, RW_switch, RW_case, RW_default;
 terminal String RW_break, RW_continue, RW_return;
-terminal String RW_true, RW_false, RW_print;
+terminal String RW_true, RW_false, RW_println, RW_print;
 terminal String TK_char, TK_string, TK_int, TK_double, TK_id, TK_inc, TK_dec, TK_add, TK_sub;
 terminal String TK_plus, TK_minus, TK_mult, TK_div, TK_pow, TK_mod, TK_uminus;
 terminal String TK_equequ, TK_notequ, TK_lessequ, TK_moreequ, TK_equ, TK_less, TK_more;
@@ -206,10 +206,11 @@ CAST ::=
 
 PRINT ::=
     PRINTCOLOR COLORLPAR EXP COLORRPAR TK_semicolon |
-    PRINTCOLOR COLORLPAR COLORRPAR TK_semicolon     ;
+    PRINTCOLOR COLORLPAR COLORRPAR TK_semicolon     |
+    RW_print :p {:painter.USEFNC(pleft, pright);:} COLORLPAR EXP COLORRPAR TK_semicolon;
 
 PRINTCOLOR ::=
-    RW_print :p {:painter.USEFNC(pleft, pright);:} ;
+    RW_println :p {:painter.USEFNC(pleft, pright);:} ;
 
 ENV ::=
     COLORLBRC INSTRUCTIONS COLORRBRC |

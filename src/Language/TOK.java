@@ -8,63 +8,64 @@ package Language;
 /** CUP generated class containing symbol constants. */
 public class TOK {
   /* terminals */
-  public static final int TK_equ = 43;
+  public static final int TK_equ = 44;
   public static final int RW_switch = 14;
-  public static final int TK_comma = 53;
-  public static final int TK_notequ = 40;
-  public static final int TK_rbrc = 52;
+  public static final int TK_comma = 54;
+  public static final int TK_notequ = 41;
+  public static final int TK_rbrc = 53;
   public static final int RW_break = 17;
-  public static final int TK_lessequ = 41;
-  public static final int TK_string = 24;
+  public static final int TK_lessequ = 42;
+  public static final int TK_string = 25;
   public static final int RW_main = 2;
+  public static final int RW_println = 22;
   public static final int RW_int = 7;
-  public static final int TK_dec = 29;
+  public static final int TK_dec = 30;
   public static final int RW_for = 11;
   public static final int RW_true = 20;
-  public static final int TK_sub = 31;
-  public static final int TK_equequ = 39;
+  public static final int TK_sub = 32;
+  public static final int TK_equequ = 40;
   public static final int RW_while = 12;
-  public static final int TK_colon = 54;
-  public static final int TK_or = 47;
-  public static final int TK_pow = 36;
+  public static final int TK_colon = 55;
+  public static final int TK_or = 48;
+  public static final int TK_pow = 37;
   public static final int RW_void = 3;
-  public static final int TK_lpar = 49;
-  public static final int TK_uminus = 38;
+  public static final int TK_lpar = 50;
+  public static final int TK_uminus = 39;
   public static final int RW_false = 21;
   public static final int RW_do = 13;
   public static final int RW_else = 10;
-  public static final int TK_id = 27;
-  public static final int TK_double = 26;
+  public static final int TK_id = 28;
+  public static final int TK_double = 27;
   public static final int EOF = 0;
   public static final int RW_boolean = 5;
-  public static final int RW_print = 22;
-  public static final int TK_more = 45;
+  public static final int RW_print = 23;
+  public static final int TK_more = 46;
   public static final int RW_continue = 18;
   public static final int error = 1;
-  public static final int TK_int = 25;
+  public static final int TK_int = 26;
   public static final int RW_double = 8;
-  public static final int TK_question = 56;
-  public static final int TK_mult = 34;
-  public static final int TK_lbrc = 51;
-  public static final int TK_not = 48;
-  public static final int TK_and = 46;
-  public static final int TK_char = 23;
-  public static final int TK_semicolon = 55;
-  public static final int TK_inc = 28;
-  public static final int TK_div = 35;
+  public static final int TK_question = 57;
+  public static final int TK_mult = 35;
+  public static final int TK_lbrc = 52;
+  public static final int TK_not = 49;
+  public static final int TK_and = 47;
+  public static final int TK_char = 24;
+  public static final int TK_semicolon = 56;
+  public static final int TK_inc = 29;
+  public static final int TK_div = 36;
   public static final int RW_String = 4;
-  public static final int TK_less = 44;
+  public static final int TK_less = 45;
   public static final int RW_default = 16;
-  public static final int TK_moreequ = 42;
+  public static final int TK_moreequ = 43;
   public static final int RW_char = 6;
-  public static final int TK_rpar = 50;
+  public static final int TK_rpar = 51;
   public static final int RW_return = 19;
-  public static final int TK_add = 30;
-  public static final int TK_mod = 37;
+  public static final int TK_add = 31;
+  public static final int TK_mod = 38;
   public static final int RW_if = 9;
-  public static final int TK_minus = 33;
+  public static final int TK_minus = 34;
   public static final int RW_case = 15;
-  public static final int TK_plus = 32;
+  public static final int TK_plus = 33;
   public static final String[] terminalNames = new String[] {
   "EOF",
   "error",
@@ -88,6 +89,7 @@ public class TOK {
   "RW_return",
   "RW_true",
   "RW_false",
+  "RW_println",
   "RW_print",
   "TK_char",
   "TK_string",
