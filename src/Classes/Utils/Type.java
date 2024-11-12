@@ -5,7 +5,8 @@ public enum Type {
     BOOLEAN ("boolean") ,
     CHAR    ("char"   ) ,
     STRING  ("String" ) ,
-    NULL    ("null"   ) ;
+    NULL    ("null"   ) ,
+    LOCAL   ("local"  ) ;
 
     private String value;
     private Type(String value) {
