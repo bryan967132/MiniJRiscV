@@ -21,8 +21,8 @@ public class CallFunction extends Expression {
 
          // 1. Guardar los argumentos
         gen.addi(R.SP.n, R.SP.n, -4 * 2);
-        this.args.forEach(param -> {
-            param.exec(env, gen);
+        this.args.forEach(arg -> {
+            arg.exec(env, gen);
             env.popObject();
         });
         gen.addi(R.SP.n, R.SP.n, 4 * (this.args.size() + 2));
