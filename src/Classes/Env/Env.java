@@ -5,7 +5,10 @@ import java.util.Stack;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import Classes.Utils.Metadata;
+import Classes.Utils.Outs;
+import Classes.Utils.Error;
 import Classes.Utils.StackValue;
+import Classes.Utils.TypeError;
 public class Env {
     public Env previous;
     public String name;
@@ -104,5 +107,18 @@ public class Env {
         return this.stack.stream()
             .filter(obj -> "local".equals(obj.type.getValue()))
             .collect(Collectors.toList()).get(index);
+    }
+    public void setError(String errorD, int line, int column) {
+        if(!match(errorD, line, column)) {
+            Outs.errors.add(new Error(line, column, TypeError.SEMANTIC, errorD));
+        }
+    }
+    public boolean match(String err, int line, int column) {
+        for(Error s : Outs.errors) {
+            if(s.toString().equals(new Error(line, column, TypeError.SEMANTIC, err).toString())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
