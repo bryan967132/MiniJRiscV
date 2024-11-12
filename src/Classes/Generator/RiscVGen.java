@@ -169,11 +169,14 @@ public class RiscVGen {
     public void fli(String rd, int inmediato) {
         riscVMain.add("\tfli.s " + rd + ", " + inmediato);
     }
-    public void fmv(String rd, String rs1) {
+    public void fmvs(String rd, String rs1) {
         riscVMain.add("\tfmv.s " + rd + ", " + rs1);
     }
-    public void fmvx(String rd, String rs1) {
+    public void fmvsx(String rd, String rs1) {
         riscVMain.add("\tfmv.s.x " + rd + ", " + rs1);
+    }
+    public void fmvwx(String rd, String rs1) {
+        riscVMain.add("\tfmv.w.x " + rd + ", " + rs1);
     }
     public void flw(String rd, String rs1) {
         riscVMain.add("\tflw " + rd + ", 0(" + rs1 + ")");
