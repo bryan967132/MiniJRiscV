@@ -31,28 +31,25 @@ public class RiscVGen {
         li(R.A7.n, 10);
         ecall();
         addComment("******* FIN PROGRAMA ********");
-        if(usedBuiltins.contains("concatString")  || usedBuiltins.contains("lessOrEqual") ||
-            usedBuiltins.contains("greatOrEqual") || usedBuiltins.contains("less")        ||
-            usedBuiltins.contains("great")        || usedBuiltins.contains("equal")       ||
-            usedBuiltins.contains("notEqual")     || usedBuiltins.contains("printBoolean")) {
+        if(usedBuiltins.contains("lessOrEqual")         || usedBuiltins.contains("greaterOrEqual")        ||
+            usedBuiltins.contains("less")               || usedBuiltins.contains("greater")               ||
+            usedBuiltins.contains("equal")              || usedBuiltins.contains("notEqual")              ||
+            usedBuiltins.contains("lessOrEqualStrings") || usedBuiltins.contains("greaterOrEqualStrings") ||
+            usedBuiltins.contains("lessStrings")        || usedBuiltins.contains("greaterStrings")        ||
+            usedBuiltins.contains("equalStrings")       || usedBuiltins.contains("notEqualStrings")       ||
+            usedBuiltins.contains("printBoolean")       || usedBuiltins.contains("concatString")) {
             addComment("========= Builtins ==========");
-            if(usedBuiltins.contains("concatString")) {
-                addComment("------- concatString --------");
-                addLabel("concatString");
-                Builtins.concatString(this);
-                addComment("----- Fin concatString ------");
-            }
             if(usedBuiltins.contains("lessOrEqual")) {
                 addComment("-------- lessOrEqual --------");
                 addLabel("lessOrEqual");
                 Builtins.lessOrEqual(this);
                 addComment("------ Fin lessOrEqual ------");
             }
-            if(usedBuiltins.contains("greatOrEqual")) {
-                addComment("------- greatOrEqual --------");
-                addLabel("greatOrEqual");
-                Builtins.greatOrEqual(this);
-                addComment("----- Fin greatOrEqual ------");
+            if(usedBuiltins.contains("greaterOrEqual")) {
+                addComment("------ greaterOrEqual -------");
+                addLabel("greaterOrEqual");
+                Builtins.greaterOrEqual(this);
+                addComment("---- Fin greaterOrEqual -----");
             }
             if(usedBuiltins.contains("less")) {
                 addComment("----------- less ------------");
@@ -60,11 +57,11 @@ public class RiscVGen {
                 Builtins.less(this);
                 addComment("--------- Fin less ----------");
             }
-            if(usedBuiltins.contains("great")) {
-                addComment("----------- great -----------");
-                addLabel("great");
-                Builtins.great(this);
-                addComment("--------- Fin great ---------");
+            if(usedBuiltins.contains("greater")) {
+                addComment("---------- greater ----------");
+                addLabel("greater");
+                Builtins.greater(this);
+                addComment("-------- Fin greater --------");
             }
             if(usedBuiltins.contains("equal")) {
                 addComment("----------- equal -----------");
@@ -78,11 +75,53 @@ public class RiscVGen {
                 Builtins.notEqual(this);
                 addComment("------- Fin notEqual --------");
             }
+            if(usedBuiltins.contains("lessOrEqualStrings")) {
+                addComment("---- lessOrEqualStrings -----");
+                addLabel("lessOrEqualStrings");
+                Builtins.lessOrEqualStrings(this);
+                addComment("-- Fin lessOrEqualStrings ---");
+            }
+            if(usedBuiltins.contains("greaterOrEqualStrings")) {
+                addComment("--- greaterOrEqualStrings ---");
+                addLabel("greaterOrEqualStrings");
+                Builtins.greaterOrEqualStrings(this);
+                addComment("- Fin greaterOrEqualStrings -");
+            }
+            if(usedBuiltins.contains("lessStrings")) {
+                addComment("-------- lessStrings --------");
+                addLabel("lessStrings");
+                Builtins.lessStrings(this);
+                addComment("------ Fin lessStrings ------");
+            }
+            if(usedBuiltins.contains("greaterStrings")) {
+                addComment("------ greaterStrings -------");
+                addLabel("greaterStrings");
+                Builtins.greaterStrings(this);
+                addComment("----- Fin greaterStrings ----");
+            }
+            if(usedBuiltins.contains("equalStrings")) {
+                addComment("------- equalStrings --------");
+                addLabel("equalStrings");
+                Builtins.equalStrings(this);
+                addComment("----- Fin equalStrings ------");
+            }
+            if(usedBuiltins.contains("notEqualStrings")) {
+                addComment("----- notEqualStrings -------");
+                addLabel("notEqualStrings");
+                Builtins.notEqualStrings(this);
+                addComment("--- Fin notEqualStrings -----");
+            }
             if(usedBuiltins.contains("printBoolean")) {
                 addComment("------- printBoolean --------");
                 addLabel("printBoolean");
                 Builtins.printBoolean(this);
                 addComment("----- Fin printBoolean ------");
+            }
+            if(usedBuiltins.contains("concatString")) {
+                addComment("------- concatString --------");
+                addLabel("concatString");
+                Builtins.concatString(this);
+                addComment("----- Fin concatString ------");
             }
             addComment("======= Fin Builtins ========");
         }
