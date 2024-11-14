@@ -47,6 +47,7 @@ public class Logic extends Expression {
             final String labelFalse = gen.getLabel();
             final String labelEnd = gen.getLabel();
 
+            gen.pop(R.T0.n);
             gen.beq(R.T0.n, R.Z.n, labelFalse);
             gen.pop(R.T0.n);
             gen.beq(R.T0.n, R.Z.n, labelFalse);
@@ -79,6 +80,7 @@ public class Logic extends Expression {
             final String labelTrue = gen.getLabel();
             final String labelEnd = gen.getLabel();
 
+            gen.pop(R.T0.n);
             gen.bne(R.T0.n, R.Z.n, labelTrue);
             gen.pop(R.T0.n);
             gen.bne(R.T0.n, R.Z.n, labelTrue);
