@@ -20,25 +20,27 @@ public class Print extends Instruction {
     public void exec(Env env, RiscVGen gen) {
         if(env.previous == null) {
             gen.addComment("=========== PRINT ===========");
-            this.exp.exec(env, gen);
-            final StackValue value = env.popObject();
-            if(value.type == Type.NULL) {
-                new Primitive(0, 0, "null", Type.STRING).exec(env, gen);;
-                gen.pop(R.A0.n);
-                gen.printString();
-            } else if(value.type == Type.DOUBLE) {
-                gen.popFloat(F.FA0.n);
-                gen.printFloat();
-            } else {
-                gen.pop(R.A0.n);
-                if(value.type == Type.STRING) {
+            if(exp != null) {
+                exp.exec(env, gen);
+                final StackValue value = env.popObject();
+                if(value.type == Type.NULL) {
+                    new Primitive(0, 0, "null", Type.STRING).exec(env, gen);;
+                    gen.pop(R.A0.n);
                     gen.printString();
-                } else if(value.type == Type.CHAR) {
-                    gen.printChar();
-                } else if(value.type == Type.INT) {
-                    gen.printInt();
+                } else if(value.type == Type.DOUBLE) {
+                    gen.popFloat(F.FA0.n);
+                    gen.printFloat();
                 } else {
-                    gen.callBuiltin("printBoolean");
+                    gen.pop(R.A0.n);
+                    if(value.type == Type.STRING) {
+                        gen.printString();
+                    } else if(value.type == Type.CHAR) {
+                        gen.printChar();
+                    } else if(value.type == Type.INT) {
+                        gen.printInt();
+                    } else {
+                        gen.callBuiltin("printBoolean");
+                    }
                 }
             }
             if(newLine) {
