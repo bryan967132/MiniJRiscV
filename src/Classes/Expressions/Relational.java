@@ -146,7 +146,7 @@ public class Relational extends Expression {
             if(value2.type == Type.INT || value2.type == Type.DOUBLE || value2.type == Type.CHAR) {
                 if(value1.type != Type.DOUBLE) gen.fcvtsw(F.FT1.n, R.T1.n);
                 if(value2.type != Type.DOUBLE) gen.fcvtsw(F.FT0.n, R.T0.n);
-                gen.callBuiltin("greaterOrEqual");
+                gen.callBuiltin("greaterEqual");
                 env.pushObject(new StackValue(Type.BOOLEAN, 4, env.depth));
                 return;
             }
@@ -157,7 +157,7 @@ public class Relational extends Expression {
         if(value1.type == value2.type && value1.type == Type.STRING) {
             gen.add(R.A0.n, R.Z.n, R.T1.n);
             gen.add(R.A1.n, R.Z.n, R.T0.n);
-            gen.callBuiltin("greaterOrEqualStrings");
+            gen.callBuiltin("greaterEqualStrings");
             env.pushObject(new StackValue(Type.BOOLEAN, 4, env.depth));
             return;
         }
@@ -187,7 +187,7 @@ public class Relational extends Expression {
             if(value2.type == Type.INT || value2.type == Type.DOUBLE || value2.type == Type.CHAR) {
                 if(value1.type != Type.DOUBLE) gen.fcvtsw(F.FT1.n, R.T1.n);
                 if(value2.type != Type.DOUBLE) gen.fcvtsw(F.FT0.n, R.T0.n);
-                gen.callBuiltin("lessOrEqual");
+                gen.callBuiltin("lessEqual");
                 env.pushObject(new StackValue(Type.BOOLEAN, 4, env.depth));
                 return;
             }
@@ -198,7 +198,7 @@ public class Relational extends Expression {
         if(value1.type == value2.type && value1.type == Type.STRING) {
             gen.add(R.A0.n, R.Z.n, R.T1.n);
             gen.add(R.A1.n, R.Z.n, R.T0.n);
-            gen.callBuiltin("lessOrEqualStrings");
+            gen.callBuiltin("lessEqualStrings");
             env.pushObject(new StackValue(Type.BOOLEAN, 4, env.depth));
             return;
         }
