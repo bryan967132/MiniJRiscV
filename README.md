@@ -229,19 +229,19 @@ Simula heap con etiquetas.
 ```
 
 ## Precedencia de Operadores
-| Nivel | Asociatividad  |                              Token                               |
-|   -   |       -        |                                -                                 |
-|   10  | Izquierda      | ```TK_question```, ```TK_colon```                                |
-|   9   | Izquierda      | ```TK_or```                                                      |
-|   8   | Izquierda      | ```TK_and```                                                     |
-|   7   | Derecha        | ```TK_not```                                                     |
-|   6   | Izquierda      | ```TK_equequ```, ```TK_notequ```                                 |
-|   5   | Izquierda      | ```TK_lessequ```, ```TK_moreequ```, ```TK_less```, ```TK_more``` |
-|   4   | Izquierda      | ```TK_plus```, ```TK_minus```                                    |
-|   3   | Izquierda      | ```TK_mult```, ```TK_div```, ```TK_mod```                        |
-|   2   | No Asociativa  | ```TK_pow```                                                     |
-|   1   | Derecha        | ```TK_uminus```                                                  |
-|   0   | Izquierda      | ```TK_inc```, ```TK_dec```                                       |
+| Nivel | Asociatividad  |              Token                |
+|   -   |       -        |                -                  |
+|   10  | Izquierda      | ```?``` ```:```                   |
+|   9   | Izquierda      | ```\|\|```                        |
+|   8   | Izquierda      | ```&&```                          |
+|   7   | Derecha        | ```!```                           |
+|   6   | Izquierda      | ```==``` ```!=```                 |
+|   5   | Izquierda      | ```<=``` ```>=``` ```<``` ```>``` |
+|   4   | Izquierda      | ```+``` ```-```                   |
+|   3   | Izquierda      | ```*``` ```/``` ```%```           |
+|   2   | No Asociativa  | ```^```                           |
+|   1   | Derecha        | ```-```                           |
+|   0   | Izquierda      | ```++``` ```--```                 |
 
 ## Instalación JFlex y CUP
 * Descargar la JFlex: [JFlex](https://jflex.de/download.html)
