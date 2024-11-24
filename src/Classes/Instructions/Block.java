@@ -9,7 +9,7 @@ import Classes.Utils.TypeInst;
 public class Block extends Instruction {
     ArrayList<Statement> instructions;
     public Block(int line, int column, ArrayList<Statement> instructions) {
-        super(line, column, TypeInst.BLOCK_INST);
+        super(line, column, TypeInst.BLOCK);
         this.instructions = instructions;
     }
     public void exec(Env env, RiscVGen gen) {

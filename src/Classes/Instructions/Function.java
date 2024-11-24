@@ -15,14 +15,14 @@ public class Function extends Instruction {
     public Block block;
     public Type type;
     public Function(int line, int column, String id, ArrayList<Parameter> params, Block block, Type type) {
-        super(line, column, TypeInst.INIT_FUNCTION);
+        super(line, column, TypeInst.INITFUNC);
         this.id = id;
         this.params = params;
         this.block = block;
         this.type = type;
     }
     public void exec(Env env, RiscVGen gen) {
-        final int baseSize = 0; // | ra | fp |
+        final int baseSize = 2; // | ra | fp |
 
         final int paramSize = this.params.size(); // | ra | fp | p1 | p2 | ... | pn |
 
