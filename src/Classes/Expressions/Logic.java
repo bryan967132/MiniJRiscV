@@ -11,7 +11,7 @@ public class Logic extends Expression {
     private String sign;
     private Expression exp2;
     public Logic(int line, int column, Expression exp1, String sign, Expression exp2) {
-        super(line, column, TypeExp.LOGIC_OP);
+        super(line, column, TypeExp.LOGIC);
         this.exp1 = exp1;
         this.sign = sign;
         this.exp2 = exp2;

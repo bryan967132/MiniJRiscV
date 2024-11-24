@@ -10,7 +10,7 @@ public class CallFunction extends Expression {
     public String id;
     ArrayList<Expression> args;
     public CallFunction(int line, int column, String id, ArrayList<Expression> args) {
-        super(line, column, TypeExp.CALL_FUNC);
+        super(line, column, TypeExp.CALLFUNC);
         this.id = id;
         this.args = args;
     }

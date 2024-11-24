@@ -15,7 +15,7 @@ public class Arithmetic extends Expression {
     private Expression exp2;
     private Type type;
     public Arithmetic(int line, int column, Expression exp1, String sign, Expression exp2) {
-        super(line, column, TypeExp.ARITHMETIC_OP);
+        super(line, column, TypeExp.ARITHMETIC);
         this.exp1 = exp1;
         this.sign = sign;
         this.exp2 = exp2;

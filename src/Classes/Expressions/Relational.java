@@ -12,7 +12,7 @@ public class Relational extends Expression {
     private String sign;
     private Expression exp2;
     public Relational(int line, int column, Expression exp1, String sign, Expression exp2) {
-        super(line, column, TypeExp.RELATIONAL_OP);
+        super(line, column, TypeExp.RELATIONAL);
         this.exp1 = exp1;
         this.sign = sign;
         this.exp2 = exp2;
@@ -26,10 +26,10 @@ public class Relational extends Expression {
                 notEqual(env, gen);
                 break;
             case ">=":
-                greaterOrEqual(env, gen);
+                greaterEqual(env, gen);
                 break;
             case "<=":
-                lessOrEqual(env, gen);
+                lessEqual(env, gen);
                 break;
             case ">":
                 greater(env, gen);
@@ -123,7 +123,7 @@ public class Relational extends Expression {
         env.setError("Los tipos no son válidos para operaciones relacionales", exp1.line, exp1.column);
         env.pushObject(new StackValue(Type.NULL, 4, env.depth));
     }
-    public void greaterOrEqual(Env env, RiscVGen gen) {
+    public void greaterEqual(Env env, RiscVGen gen) {
         this.exp1.exec(env, gen);
         this.exp2.exec(env, gen);
 
@@ -164,7 +164,7 @@ public class Relational extends Expression {
         env.setError("Los tipos no son válidos para operaciones relacionales", exp1.line, exp1.column);
         env.pushObject(new StackValue(Type.NULL, 4, env.depth));
     }
-    public void lessOrEqual(Env env, RiscVGen gen) {
+    public void lessEqual(Env env, RiscVGen gen) {
         this.exp1.exec(env, gen);
         this.exp2.exec(env, gen);
 
