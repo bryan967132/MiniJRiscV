@@ -96,7 +96,7 @@ public class Env {
     public Pair getObject(String id) {
         int byteOffset = 0;
         for(int i = this.stack.size() - 1; i >= 0; i --) {
-            if(this.stack.get(i).id.equals(id)) {
+            if(this.stack.get(i).id != null && this.stack.get(i).id.equals(id)) {
                 return new Pair(byteOffset, this.stack.get(i));
             }
             byteOffset += this.stack.get(i).length;
