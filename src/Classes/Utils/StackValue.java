@@ -45,6 +45,9 @@ public class StackValue {
         this.type = type;
         this.length = length;
     }
+    public StackValue(String id) {
+        this.id = id;
+    }
     public String toString() {
         return "{ id: " + id + ", type: " + type + ", length: " + length + ", offset: " + offset + ", depth: " + depth + " }";
     }
