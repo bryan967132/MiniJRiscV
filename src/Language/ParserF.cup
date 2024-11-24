@@ -35,9 +35,9 @@ terminal String TK_lpar, TK_rpar, TK_lbrc, TK_rbrc, TK_comma, TK_colon, TK_semic
 /* 4. No Terminales*/
 non terminal String INIT, INSTSGLOBAL, INSTGLOBAL, CALLMAINFUNC, CALLFUNC, LISTARGS, LISTPARAMS;
 non terminal String EXP, ARITHMETICS, RELATIONALS, LOGICS, INCDEC, ADDSUB, TERNARY, CAST;
-non terminal String DECLID, TYPE, INITIDS, INITID, DECLFUNC, ENV, INSTRUCTIONS, INSTRUCTION;
-non terminal String PRINT, IFSTRUCT, SWITCHSTRUCT, ENVS, CASESDEFAULT, CASES, DEFAULT, CASE;
-non terminal String LOOPWHILE, LOOPDOWHILE, LOOPFOR, ARGSFOR, INITIALIZE, UPDATESFOR, UPDATEFOR, REASIGNS, REASIGN;
+non terminal String INITVAR, TYPE, INITIDS, INITID, DECLFUNC, ENV, INSTRUCTIONS, INSTRUCTION;
+non terminal String PRINT, IF, SWITCH, ENVS, CASESDEFAULT, CASES, DEFAULT, CASE;
+non terminal String WHILE, DOWHILE, FOR, ARGSFOR, INITIALIZE, UPDATESFOR, UPDATEFOR, ASSIGNS, ASSIGN;
 non terminal String IDCOLORFNC, IDCOLORUSEFNC, VOIDCOLOR, IFCOLOR, CASECOLOR, DEFAULTCOLOR, PRINTCOLOR, COLORLPAR, COLORRPAR, COLORLBRC, COLORRBRC;
 
 /* 5. Precedencias */
@@ -66,25 +66,14 @@ INSTSGLOBAL ::=
 
 INSTGLOBAL ::=
     CALLMAINFUNC |
-    DECLID       |
+    INITVAR      |
     DECLFUNC     |
     error        ;
 
 CALLMAINFUNC ::=
     RW_main :mn {:painter.RW4(mnleft, mnright);:} CALLFUNC TK_semicolon ;
 
-CALLFUNC ::=
-    IDCOLORUSEFNC COLORLPAR LISTARGS COLORRPAR |
-    IDCOLORUSEFNC COLORLPAR COLORRPAR          ;
-
-IDCOLORUSEFNC ::=
-    TK_id :id {:painter.USEFNC(idleft, idright);:} ;
-
-LISTARGS ::=
-    LISTARGS TK_comma EXP |
-    EXP                   ;
-
-DECLID ::=
+INITVAR ::=
     TYPE INITIDS TK_semicolon ;
 
 INITIDS ::=
@@ -111,15 +100,15 @@ LISTPARAMS ::=
     LISTPARAMS TK_comma TYPE TK_id :id {:painter.VARIABLE(idleft, idright);:} |
     TYPE TK_id :id {:painter.VARIABLE(idleft, idright);:}                     ;
 
-IFSTRUCT ::=
-    IFCOLOR COLORLPAR EXP COLORRPAR ENV RW_else :el {:painter.RW2(elleft, elright);:} IFSTRUCT |
-    IFCOLOR COLORLPAR EXP COLORRPAR ENV RW_else :el {:painter.RW2(elleft, elright);:} ENV      |
+IF ::=
+    IFCOLOR COLORLPAR EXP COLORRPAR ENV RW_else :el {:painter.RW2(elleft, elright);:} IF  |
+    IFCOLOR COLORLPAR EXP COLORRPAR ENV RW_else :el {:painter.RW2(elleft, elright);:} ENV |
     IFCOLOR COLORLPAR EXP COLORRPAR ENV             ;
 
 IFCOLOR ::=
     RW_if :i {:painter.RW2(ileft, iright);:} ;
 
-SWITCHSTRUCT ::=
+SWITCH ::=
     RW_switch :sw {:painter.RW2(swleft, swright);:} COLORLPAR EXP COLORRPAR ENVS ;
 
 ENVS ::=
@@ -151,7 +140,7 @@ DEFAULT ::=
 DEFAULTCOLOR ::=
     RW_default :df {:painter.RW2(dfleft, dfright);:} ;
 
-LOOPFOR ::=
+FOR ::=
     RW_for :fr {:painter.RW2(frleft, frright);:} COLORLPAR ARGSFOR COLORRPAR ENV ;
 
 ARGSFOR ::=
@@ -165,44 +154,34 @@ ARGSFOR ::=
     TK_semicolon TK_semicolon                           ;
 
 INITIALIZE ::=
-    TYPE REASIGNS |
-    REASIGNS      ;
+    TYPE ASSIGNS |
+    ASSIGNS      ;
 
-REASIGNS ::=
-    REASIGNS TK_comma REASIGN |
-    REASIGN                   ;
+ASSIGNS ::=
+    ASSIGNS TK_comma ASSIGN |
+    ASSIGN                  ;
 
 UPDATESFOR ::=
     UPDATESFOR TK_comma UPDATEFOR |
     UPDATEFOR                     ;
 
 UPDATEFOR ::=
-    INCDEC  |
-    REASIGN |
-    ADDSUB  ;
+    INCDEC |
+    ASSIGN |
+    ADDSUB ;
 
-LOOPWHILE ::=
+WHILE ::=
     RW_while :whl {:painter.RW2(whlleft, whlright);:} COLORLPAR EXP COLORRPAR ENV ;
 
-LOOPDOWHILE ::=
+DOWHILE ::=
     RW_do :d {:painter.RW2(dleft, dright);:} ENV RW_while :whl {:painter.RW2(whlleft, whlright);:} COLORLPAR EXP COLORRPAR TK_semicolon ;
 
-REASIGN ::=
+ASSIGN ::=
     TK_id :id {:painter.USEVARIABLE(idleft, idright);:} TK_equ EXP ;
-
-INCDEC ::=
-    TK_id :id TK_inc {:painter.USEVARIABLE(idleft, idright);:} |
-    TK_id :id TK_dec {:painter.USEVARIABLE(idleft, idright);:} ;
 
 ADDSUB ::=
     TK_id :id {:painter.USEVARIABLE(idleft, idright);:} TK_add EXP |
     TK_id :id {:painter.USEVARIABLE(idleft, idright);:} TK_sub EXP ;
-
-TERNARY ::=
-    EXP TK_question :q {:painter.SYMBS1(qleft, qright);:} EXP TK_colon :c {:painter.SYMBS1(cleft, cright);:} EXP ;
-
-CAST ::=
-    TYPE COLORLPAR EXP COLORRPAR ;
 
 PRINT ::=
     PRINTCOLOR COLORLPAR EXP COLORRPAR TK_semicolon |
@@ -221,17 +200,17 @@ INSTRUCTIONS ::=
     INSTRUCTION              ;
 
 INSTRUCTION ::=
-    DECLID                     |
-    IFSTRUCT                   |
-    SWITCHSTRUCT               |
-    LOOPFOR                    |
-    LOOPWHILE                  |
-    LOOPDOWHILE                |
-    REASIGN       TK_semicolon |
-    ADDSUB        TK_semicolon |
-    INCDEC        TK_semicolon |
-    CALLFUNC      TK_semicolon |
-    PRINT                      |
+    INITVAR                  |
+    IF                       |
+    SWITCH                   |
+    FOR                      |
+    WHILE                    |
+    DOWHILE                  |
+    ASSIGN      TK_semicolon |
+    ADDSUB      TK_semicolon |
+    INCDEC      TK_semicolon |
+    CALLFUNC    TK_semicolon |
+    PRINT                    |
     RW_return   :t {:painter.RW2(tleft, tright);:} EXP TK_semicolon |
     RW_return   :t {:painter.RW2(tleft, tright);:} TK_semicolon     |
     RW_continue :t {:painter.RW2(tleft, tright);:} TK_semicolon     |
@@ -283,6 +262,27 @@ LOGICS ::=
     EXP TK_and EXP |
     EXP TK_or  EXP |
     TK_not     EXP ;
+
+INCDEC ::=
+    TK_id :id TK_inc {:painter.USEVARIABLE(idleft, idright);:} |
+    TK_id :id TK_dec {:painter.USEVARIABLE(idleft, idright);:} ;
+
+CALLFUNC ::=
+    IDCOLORUSEFNC COLORLPAR LISTARGS COLORRPAR |
+    IDCOLORUSEFNC COLORLPAR COLORRPAR          ;
+
+IDCOLORUSEFNC ::=
+    TK_id :id {:painter.USEFNC(idleft, idright);:} ;
+
+LISTARGS ::=
+    LISTARGS TK_comma EXP |
+    EXP                   ;
+
+TERNARY ::=
+    EXP TK_question :q {:painter.SYMBS1(qleft, qright);:} EXP TK_colon :c {:painter.SYMBS1(cleft, cright);:} EXP ;
+
+CAST ::=
+    TYPE COLORLPAR EXP COLORRPAR ;
 
 COLORLBRC ::=
     TK_lbrc :l {:painter.BRKT(nIB, lleft, lright); nIB ++;:} ;
