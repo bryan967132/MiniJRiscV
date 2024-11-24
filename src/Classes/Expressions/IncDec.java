@@ -26,5 +26,6 @@ public class IncDec extends Expression {
                 new Primitive(line, column, "1", Type.INT)
             )
         ).exec(env, gen);
+        new AccessVar(line, column, id).exec(env, gen);
     }
 }
