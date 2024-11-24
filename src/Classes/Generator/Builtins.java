@@ -1,11 +1,11 @@
 package Classes.Generator;
 public class Builtins {
-    public static void lessOrEqual(RiscVGen gen) {
+    public static void lessEqual(RiscVGen gen) {
         gen.fles(R.T0.n, F.FT1.n, F.FT0.n);
         gen.push(R.T0.n);
         gen.ret();
     }
-    public static void greaterOrEqual(RiscVGen gen) {
+    public static void greaterEqual(RiscVGen gen) {
         gen.fges(R.T0.n, F.FT1.n, F.FT0.n);
         gen.push(R.T0.n);
         gen.ret();
@@ -39,7 +39,7 @@ public class Builtins {
         gen.addLabel(endLabel);
         gen.ret();
     }
-    public static void lessOrEqualStrings(RiscVGen gen) {
+    public static void lessEqualStrings(RiscVGen gen) {
         String loop = gen.getLabel();
         String labelTrue = gen.getLabel();
         String labelFalse = gen.getLabel();
@@ -62,7 +62,7 @@ public class Builtins {
         gen.addLabel(end);
         gen.ret();
     }
-    public static void greaterOrEqualStrings(RiscVGen gen) {
+    public static void greaterEqualStrings(RiscVGen gen) {
         String loop = gen.getLabel();
         String labelTrue = gen.getLabel();
         String labelFalse = gen.getLabel();

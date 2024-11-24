@@ -39,17 +39,17 @@ public class RiscVGen {
             usedBuiltins.contains("equalStrings")       || usedBuiltins.contains("notEqualStrings")       ||
             usedBuiltins.contains("printBoolean")       || usedBuiltins.contains("concatString")) {
             addComment("========= Builtins ==========");
-            if(usedBuiltins.contains("lessOrEqual")) {
-                addComment("-------- lessOrEqual --------");
+            if(usedBuiltins.contains("lessEqual")) {
+                addComment("--------- lessEqual ---------");
                 addLabel("lessOrEqual");
-                Builtins.lessOrEqual(this);
-                addComment("------ Fin lessOrEqual ------");
+                Builtins.lessEqual(this);
+                addComment("------- Fin lessEqual -------");
             }
             if(usedBuiltins.contains("greaterOrEqual")) {
-                addComment("------ greaterOrEqual -------");
+                addComment("------- greaterEqual --------");
                 addLabel("greaterOrEqual");
-                Builtins.greaterOrEqual(this);
-                addComment("---- Fin greaterOrEqual -----");
+                Builtins.greaterEqual(this);
+                addComment("----- Fin greaterEqual ------");
             }
             if(usedBuiltins.contains("less")) {
                 addComment("----------- less ------------");
@@ -75,17 +75,17 @@ public class RiscVGen {
                 Builtins.notEqual(this);
                 addComment("------- Fin notEqual --------");
             }
-            if(usedBuiltins.contains("lessOrEqualStrings")) {
-                addComment("---- lessOrEqualStrings -----");
-                addLabel("lessOrEqualStrings");
-                Builtins.lessOrEqualStrings(this);
-                addComment("-- Fin lessOrEqualStrings ---");
+            if(usedBuiltins.contains("lessEqualStrings")) {
+                addComment("----- lessEqualStrings ------");
+                addLabel("lessEqualStrings");
+                Builtins.lessEqualStrings(this);
+                addComment("--- Fin lessEqualStrings ----");
             }
-            if(usedBuiltins.contains("greaterOrEqualStrings")) {
-                addComment("--- greaterOrEqualStrings ---");
-                addLabel("greaterOrEqualStrings");
-                Builtins.greaterOrEqualStrings(this);
-                addComment("- Fin greaterOrEqualStrings -");
+            if(usedBuiltins.contains("greaterEqualStrings")) {
+                addComment("---- greaterEqualStrings ----");
+                addLabel("greaterEqualStrings");
+                Builtins.greaterEqualStrings(this);
+                addComment("-- Fin greaterEqualStrings --");
             }
             if(usedBuiltins.contains("lessStrings")) {
                 addComment("-------- lessStrings --------");
