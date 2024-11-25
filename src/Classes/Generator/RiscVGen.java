@@ -31,23 +31,23 @@ public class RiscVGen {
         li(R.A7.n, 10);
         ecall();
         addComment("******* FIN PROGRAMA ********");
-        if(usedBuiltins.contains("lessOrEqual")         || usedBuiltins.contains("greaterOrEqual")        ||
-            usedBuiltins.contains("less")               || usedBuiltins.contains("greater")               ||
-            usedBuiltins.contains("equal")              || usedBuiltins.contains("notEqual")              ||
-            usedBuiltins.contains("lessOrEqualStrings") || usedBuiltins.contains("greaterOrEqualStrings") ||
-            usedBuiltins.contains("lessStrings")        || usedBuiltins.contains("greaterStrings")        ||
-            usedBuiltins.contains("equalStrings")       || usedBuiltins.contains("notEqualStrings")       ||
-            usedBuiltins.contains("printBoolean")       || usedBuiltins.contains("concatString")) {
+        if(usedBuiltins.contains("lessEqual")         || usedBuiltins.contains("greaterEqual")        ||
+            usedBuiltins.contains("less")             || usedBuiltins.contains("greater")               ||
+            usedBuiltins.contains("equal")            || usedBuiltins.contains("notEqual")              ||
+            usedBuiltins.contains("lessEqualStrings") || usedBuiltins.contains("greaterEqualStrings") ||
+            usedBuiltins.contains("lessStrings")      || usedBuiltins.contains("greaterStrings")        ||
+            usedBuiltins.contains("equalStrings")     || usedBuiltins.contains("notEqualStrings")       ||
+            usedBuiltins.contains("printBoolean")     || usedBuiltins.contains("concatString")) {
             addComment("========= Builtins ==========");
             if(usedBuiltins.contains("lessEqual")) {
                 addComment("--------- lessEqual ---------");
-                addLabel("lessOrEqual");
+                addLabel("lessEqual");
                 Builtins.lessEqual(this);
                 addComment("------- Fin lessEqual -------");
             }
             if(usedBuiltins.contains("greaterOrEqual")) {
                 addComment("------- greaterEqual --------");
-                addLabel("greaterOrEqual");
+                addLabel("greaterEqual");
                 Builtins.greaterEqual(this);
                 addComment("----- Fin greaterEqual ------");
             }
